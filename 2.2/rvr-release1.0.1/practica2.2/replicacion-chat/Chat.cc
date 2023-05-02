@@ -3,6 +3,9 @@
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
+const int MAX_NICK_SIZE = 8;
+const int MAX_MESSAGE_SIZE = 80;
+
 // SERIALIZAR Y DESERIALIZAR LOS DATOS
 void ChatMessage::to_bin()
 {
