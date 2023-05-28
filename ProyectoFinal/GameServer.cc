@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-    ChatServer es(argv[1], argv[2]);
+    GameServer es(argv[1], argv[2]);
 
     es.do_messages();
 

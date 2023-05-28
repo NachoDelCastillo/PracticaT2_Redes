@@ -24,7 +24,7 @@
  *  +-------------------+
  *
  */
-class ChatMessage: public Serializable
+class ConectaCuatro_Message: public Serializable
 {
 public:
     static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t);
@@ -36,9 +36,9 @@ public:
         LOGOUT  = 2
     };
 
-    ChatMessage(){};
+    ConectaCuatro_Message(){};
 
-    ChatMessage(const std::string& n, const std::string& m):nick(n),message(m){};
+    ConectaCuatro_Message(const std::string& n, const std::string& m):nick(n),message(m){};
 
     void to_bin();
 
@@ -56,10 +56,10 @@ public:
 /**
  *  Clase para el servidor de chat
  */
-class ChatServer
+class GameServer
 {
 public:
-    ChatServer(const char * s, const char * p): socket(s, p)
+    GameServer(const char * s, const char * p): socket(s, p)
     {
         socket.bind();
     };
@@ -89,7 +89,7 @@ private:
 /**
  *  Clase para el cliente de chat
  */
-class ChatClient
+class GameClient
 {
 public:
     /**
@@ -97,7 +97,7 @@ public:
      * @param p puerto del servidor
      * @param n nick del usuario
      */
-    ChatClient(const char * s, const char * p, const char * n):socket(s, p),
+    GameClient(const char * s, const char * p, const char * n):socket(s, p),
         nick(n){};
 
     /**

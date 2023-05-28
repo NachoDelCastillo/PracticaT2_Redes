@@ -1,9 +1,9 @@
-#include "Chat.h"
+#include "ConectaCuatro.h"
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-void ChatMessage::to_bin()
+void ConectaCuatro_Message::to_bin()
 {
     alloc_data(MESSAGE_SIZE);
 
@@ -12,7 +12,7 @@ void ChatMessage::to_bin()
     //Serializar los campos type, nick y message en el buffer _data
 }
 
-int ChatMessage::from_bin(char * bobj)
+int ConectaCuatro_Message::from_bin(char * bobj)
 {
     alloc_data(MESSAGE_SIZE);
 
@@ -26,7 +26,7 @@ int ChatMessage::from_bin(char * bobj)
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-void ChatServer::do_messages()
+void GameServer::do_messages()
 {
     while (true)
     {
@@ -46,22 +46,22 @@ void ChatServer::do_messages()
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-void ChatClient::login()
+void GameClient::login()
 {
     std::string msg;
 
-    ChatMessage em(nick, msg);
-    em.type = ChatMessage::LOGIN;
+    ConectaCuatro_Message em(nick, msg);
+    em.type = ConectaCuatro_Message::LOGIN;
 
     socket.send(em, socket);
 }
 
-void ChatClient::logout()
+void GameClient::logout()
 {
     // Completar
 }
 
-void ChatClient::input_thread()
+void GameClient::input_thread()
 {
     while (true)
     {
@@ -70,7 +70,7 @@ void ChatClient::input_thread()
     }
 }
 
-void ChatClient::net_thread()
+void GameClient::net_thread()
 {
     while(true)
     {
