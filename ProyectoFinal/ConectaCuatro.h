@@ -59,8 +59,18 @@ public:
 class GameServer
 {
 public:
-    GameServer(const char * s, const char * p): socket(s, p)
+    GameServer(const char * s, const char * p): socket(s, p), hostNick(n)
     {
+        // Crear las casillas vacias y meterlas en el tablero dependiendo del numero de filas/columnas
+        for (int i = 0; i < COLS; i++)
+        {
+            std::vector<int> fullColumn;
+            for (int i = 0; i < ROWS; i++)
+                fullColumn.push_back(0);
+
+            tab.push_back(fullColumn);
+        }
+
         socket.bind();
     };
 
@@ -70,6 +80,8 @@ public:
      */
     void do_messages();
 
+    void input_thread();
+
 private:
     /**
      *  Lista de clientes conectados al servidor de Chat, representados por
@@ -77,10 +89,25 @@ private:
      */
     std::vector<std::unique_ptr<Socket>> clients;
 
-    /**
-     * Socket del servidor
-     */
+    // VARIABLES
+
+    // RELACIONADAS CON LA CONEXION SERVIDOR-CLIENTE
+
+    // Cliente conectado al servidor
+    std::vector<std::unique_ptr<Socket>> clients;
+    // Socket utilizado
     Socket socket;
+
+    // RELACIONADAS CON EL FLUJO DE JUEGO
+
+    const int ROWS = 2; // 6 <- valores de tablero del juego original
+    const int COLS = 3; // 7 <-
+
+        // Tablero del juego, almacena la posicion de las fichas de cada jugador en cada turno
+    std::vector<std::vector<int>> tab;
+
+    // Indica si es el turno del usuario del servidor
+    bool myTurn = true;
 };
 
 // -----------------------------------------------------------------------------
