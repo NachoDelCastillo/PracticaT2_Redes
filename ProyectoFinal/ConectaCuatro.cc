@@ -24,7 +24,7 @@ void ConectaCuatro_Message::to_bin()
     // el estado del tablero entero, invluyendo los "|" 
     memcpy(tmp, message.c_str(), sizeof(char) * 300); // 80
 }
-
+v
 int ConectaCuatro_Message::from_bin(char * bobj)
 {
     alloc_data(MESSAGE_SIZE);
@@ -59,6 +59,8 @@ void GameServer::do_messages()
             socket.recv(msg,client);
 
 
+            // CLIENT_LOGIN
+            if (msg.type == ConectaCuatro_Message::MessageType::CLIENT_LOGIN) {
 
                             // Si ya se ha registrado un cliente, no permitir el Loggeo de un segundo cliente
                 // Ya que es un juego de 2 jugadores
@@ -69,6 +71,43 @@ void GameServer::do_messages()
                     socket.send(msg,*client_ptr);
                     continue;
                 }
+
+            }
+
+            
+                // En caso de que sea el primer cliente que se conecta, añadirlo a la lista de clientes y apuntar su nombre
+                else {
+
+                    // Añadir usuario a la lista de los clientes
+                    clients.clear();
+                    clients.push_back(std::move(client_ptr));
+                    clientNick = msg.nick;
+
+                    // Poner en pantalla el jugador que se ha unido
+                    std::cout << std::endl << MessageText(ConectaCuatro_Message::MessageType::CLIENT_LOGIN) << std::endl << std::endl;
+
+                    // Resetear variables del juego
+                    myTurn = true;
+                    for (size_t i = 0; i < tab.size(); i++)
+                        for (size_t j = 0; j < tab[0].size(); j++)
+                            tab[i][j] = 0;
+                }
+
+                        // CLIENT_LOGOUT
+            else if (msg.type == ConectaCuatro_Message::MessageType::CLIENT_LOGOUT)
+            {
+                ConectaCuatro_Message::MessageType messageType = ConectaCuatro_Message::CLIENT_LOGOUT;
+                msg.type = messageType;
+                msg.message = MessageText(messageType);
+                socket.send(msg,*clients[0]);
+                std::cout << msg.message << std::endl;
+
+                // El turno se queda en false para que no pueda ejecutar ninguna accion relacionada
+                // con el transcurso de la partida abandonada
+                myTurn = false;
+                // Eliminar el cliente del servidor
+                clients.clear();
+            }
     }
 }
 

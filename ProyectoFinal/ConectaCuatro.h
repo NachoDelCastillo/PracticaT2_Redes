@@ -31,9 +31,18 @@ public:
 
     enum MessageType
     {
-        LOGIN   = 0,
-        MESSAGE = 1,
-        LOGOUT  = 2
+        // Cliente -> Servidor 
+        CLIENT_LOGIN,
+        CLIENT_LOGOUT, // Tambien se envia del servidor al cliente para informar por la pantalla del cliente
+        // Servidor -> Cliente 
+        CLIENT_LOGIN_REJECTED,
+        HOST_LOGOUT,
+
+
+        // Cliente -> Servidor 
+        CLIENT_INPUT,
+        // Servidor -> Cliente 
+        INVALIDINPUT,
     };
 
     ConectaCuatro_Message(){};
@@ -83,6 +92,15 @@ public:
     void input_thread();
 
 private:
+
+
+        // Envia el mensaje al cliente de que el servidor se cierra y despues se desconecta
+    void HostLogout();
+
+        // Renderiza en la pantalla del usuario del servidor el tablero actual  y envia
+    // un mensaje con el tablero actual al cliente para que lo renderize en su pantalla
+    void UpdateTab(bool showTurn = true);
+
     /**
      *  Lista de clientes conectados al servidor de Chat, representados por
      *  su socket
