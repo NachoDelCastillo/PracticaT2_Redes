@@ -101,6 +101,22 @@ private:
     // un mensaje con el tablero actual al cliente para que lo renderize en su pantalla
     void UpdateTab(bool showTurn = true);
 
+
+    // Posiciona una ficha del jugador especificado en el tablero, actualizandolo internamente
+    void PlaceChips(int col, std::string playerNick);
+
+    // Renderiza en la pantalla del usuario del servidor el tablero actual  y envia
+    // un mensaje con el tablero actual al cliente para que lo renderize en su pantalla
+    void UpdateTab(bool showTurn = true);
+
+
+    // Proces el input registrado por el usuario del servidor o por el cliente
+    void ProcessInput(std::string input, std::string playerNick);
+
+
+    // Devuelve true si el input introducido es una columna valida para posicionar la ficha
+    bool ValidInput(std::string input, int& out);
+
     /**
      *  Lista de clientes conectados al servidor de Chat, representados por
      *  su socket

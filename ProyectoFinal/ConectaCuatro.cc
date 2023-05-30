@@ -108,7 +108,101 @@ void GameServer::do_messages()
                 // Eliminar el cliente del servidor
                 clients.clear();
             }
+
+            else if (msg.type == ConectaCuatro_Message::MessageType::CLIENT_INPUT)
+                // Es un input enviado desde el cliente
+                ProcessInput(msg.message, msg.nick);
     }
+}
+
+void ConectaCuatro_Server::ProcessInput(std::string input, std::string playerNick) {
+
+    // Comprobar si el input recibido es valido
+
+    // En este entero se almacenara el resultado del numero entero en caso de
+    // que sea valido
+    int result;
+
+    // Si es valido
+    if (ValidInput(input, result)) {
+
+        // Colocar la ficha
+        PlaceChips(result, playerNick);
+
+        // Ahora se pasara el turno al otro jugador
+        // Lo que depende de que jugador a posicionado la ultima ficha en el tablero
+
+        // Si el jugador que ha posicionado la ficha es el usuario del servidor
+        if(playerNick == hostNick) {
+            // Dejar de tener el turno
+            myTurn = false;
+            // Notificar al cliente de que es su turno
+            GiveClientTurn();
+        }
+
+        // Si el jugador que ha posicionado la ficha es el cliente
+        else 
+            // Notificar al propio usuario del servidor de que es su turno
+            myTurn = true;
+
+
+        // Renderizar el tablero en las pantallas de ambos jugadores
+        UpdateTab();
+    }
+
+
+bool ConectaCuatro_Server::ValidInput(std::string input, int& result) {
+
+    // Si el string no tiene longitud 1, no es un número entero válido
+    if (input.length() != 1)
+        return false; 
+
+    // Ahora comprobar si ese unico char en el string constituye un numero entre 0 y 9
+    char c = input[0];
+    if (c >= '0' && c <= '9') {
+
+        // Convertir el carácter a un número entero
+        int num = c - '0';
+
+        // Comprobar si ese numero es menor que el numero de columnas preestablecidas
+        if (num < COLS) {
+
+            // Por ultimo, falta comprobar si esa columna no esta al completo
+            int chipsInThisColumn = 0;
+            for (size_t i = 0; i < ROWS; i++)
+                if (tab[num][i] != 0)
+                    chipsInThisColumn++;
+            
+            // Si al menos cabe una ficha mas en esta columna, darlo como valido
+            if (chipsInThisColumn < ROWS) {
+
+                // Asignar la variable de salida y notificar que este input es valido
+                result = num;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void ConectaCuatro_Server::GiveClientTurn() {
+    ConectaCuatro_Message msg;
+    msg.type = ConectaCuatro_Message::MessageType::CLIENT_GIVETURN;
+    socket.send(msg,*clients[0]);
+}
+
+void ConectaCuatro_Server::UpdateTab(bool showTurn) {
+
+    // Envia el estado actual del tablero al cliente para que lo renderize en su pantalla
+    ConectaCuatro_Message msg;
+    msg.type = ConectaCuatro_Message::MessageType::CURRENTTAB;
+    msg.message = CreateTab(showTurn);
+
+    socket.send(msg,*clients[0]);
+
+    // y lo renderiza en la pantalla del usuario del servidor
+    std::cout << msg.message << std::endl;
 }
 
 // -----------------------------------------------------------------------------
