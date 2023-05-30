@@ -57,6 +57,18 @@ void GameServer::do_messages()
             ConectaCuatro_Message msg;
             Socket *client = new Socket(socket);
             socket.recv(msg,client);
+
+
+
+                            // Si ya se ha registrado un cliente, no permitir el Loggeo de un segundo cliente
+                // Ya que es un juego de 2 jugadores
+                if (clients.size() > 0) {
+                    ConectaCuatro_Message::MessageType messageType = ConectaCuatro_Message::CLIENT_LOGIN_REJECTED;
+                    msg.type = messageType;
+                    msg.message = MessageText(messageType);
+                    socket.send(msg,*client_ptr);
+                    continue;
+                }
     }
 }
 
