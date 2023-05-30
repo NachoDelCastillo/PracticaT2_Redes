@@ -53,16 +53,10 @@ void GameServer::do_messages()
 {
     while (true)
     {
-        /*
-         * NOTA: los clientes están definidos con "smart pointers", es necesario
-         * crear un unique_ptr con el objeto socket recibido y usar std::move
-         * para añadirlo al vector
-         */
-
-        //Recibir Mensajes en y en función del tipo de mensaje
-        // - LOGIN: Añadir al vector clients
-        // - LOGOUT: Eliminar del vector clients
-        // - MESSAGE: Reenviar el mensaje a todos los clientes (menos el emisor)
+            // Recibir mensajes del cliente conectado
+            ConectaCuatro_Message msg;
+            Socket *client = new Socket(socket);
+            socket.recv(msg,client);
     }
 }
 
