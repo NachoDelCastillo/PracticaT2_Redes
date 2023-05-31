@@ -108,6 +108,9 @@ private:
     // un mensaje con el tablero actual al cliente para que lo renderize en su pantalla
     void UpdateTab(bool showTurn = true);
 
+        // Crea y envia un mensaje al cliente informandole de que es su turno
+    void GiveClientTurn();
+
 
     // Posiciona una ficha del jugador especificado en el tablero, actualizandolo internamente
     void PlaceChips(int col, std::string playerNick);
@@ -128,6 +131,9 @@ private:
 
     // Proces el input registrado por el usuario del servidor o por el cliente
     void ProcessInput(std::string input, std::string playerNick);
+
+    // Posiciona una ficha del jugador especificado en el tablero, actualizandolo internamente
+    void PlaceChips(int col, std::string playerNick);
 
 
     // Devuelve true si el input introducido es una columna valida para posicionar la ficha

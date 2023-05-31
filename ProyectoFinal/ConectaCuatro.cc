@@ -151,6 +151,34 @@ void ConectaCuatro_Server::ProcessInput(std::string input, std::string playerNic
     }
 }
 
+void ConectaCuatro_Server::PlaceChips(int col, std::string playerNick) {
+
+    // Saber a que index de jugador pertenece el nombre de jugador introducido
+
+    // Aqui se almacenara el index del jugador al que le pertenece esta accion
+    int playerIndex;
+    
+    // Si el jugador que ha realizado esta accion es el propio host, el index es 1
+    if(playerNick == hostNick)
+        playerIndex = 1;
+
+    // Si el jugador que ha realizado esta accion es el cliente, el index es 2    
+    else
+        playerIndex = 2;
+
+    // Posicionar la ficha en el primer hueco libre de la columna seleccionada
+    for (int i = 0; i < ROWS; ++i) {
+        if (tab[col][i] == 0) {
+            tab[col][i] = playerIndex;
+            break;
+        }
+    }
+
+    // Si se ha posicionado una ficha, notificarlo al servidor
+    chipsInTab++;
+}
+
+
 bool ConectaCuatro_Server::CheckWin(int playerIndex) {
     // Check horizontal
     for (int i = 0; i < ROWS; ++i) {
