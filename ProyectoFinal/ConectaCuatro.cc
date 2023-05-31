@@ -149,6 +149,51 @@ void ConectaCuatro_Server::ProcessInput(std::string input, std::string playerNic
         // Renderizar el tablero en las pantallas de ambos jugadores
         UpdateTab();
     }
+}
+
+bool ConectaCuatro_Server::CheckWin(int playerIndex) {
+    // Check horizontal
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j <= COLS - 4; ++j) {
+            if (tab[i][j] == playerIndex && tab[i][j+1] == playerIndex && 
+                tab[i][j+2] == playerIndex && tab[i][j+3] == playerIndex) {
+                return true;
+            }
+        }
+    }
+    
+    // Check vertical
+    for (int i = 0; i <= ROWS - 4; ++i) {
+        for (int j = 0; j < COLS; ++j) {
+            if (tab[i][j] == playerIndex && tab[i+1][j] == playerIndex && 
+                tab[i+2][j] == playerIndex && tab[i+3][j] == playerIndex) {
+                return true;
+            }
+        }
+    }
+    
+    // Check diagonal (positive slope)
+    for (int i = 0; i <= ROWS - 4; ++i) {
+        for (int j = 0; j <= COLS - 4; ++j) {
+            if (tab[i][j] == playerIndex && tab[i+1][j+1] == playerIndex && 
+                tab[i+2][j+2] == playerIndex && tab[i+3][j+3] == playerIndex) {
+                return true;
+            }
+        }
+    }
+    
+    // Check diagonal (negative slope)
+    for (int i = 0; i <= ROWS - 4; ++i) {
+        for (int j = COLS - 1; j >= 3; --j) {
+            if (tab[i][j] == playerIndex && tab[i+1][j-1] == playerIndex && 
+                tab[i+2][j-2] == playerIndex && tab[i+3][j-3] == playerIndex) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
 
 
 bool ConectaCuatro_Server::ValidInput(std::string input, int& result) {

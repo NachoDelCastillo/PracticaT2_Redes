@@ -116,6 +116,15 @@ private:
     // un mensaje con el tablero actual al cliente para que lo renderize en su pantalla
     void UpdateTab(bool showTurn = true);
 
+    // Devuelve true si el jugador de index "playerIndex" tiene 4 fichas seguidas, ganando la partida
+    bool CheckWin(int playerIndex);
+
+
+    // Comprueba si ha ganado cualquiera de los dos jugadores o si se ha quedado empate
+    // Si alguna de estas dos condiciones es cierta, crea y envia los mensajes necesarios 
+    // Si ninguna de las dos condiciones anteriores es cierta, devuelve false
+    bool CheckEndGame();
+
 
     // Proces el input registrado por el usuario del servidor o por el cliente
     void ProcessInput(std::string input, std::string playerNick);
@@ -150,6 +159,67 @@ private:
     // Indica si es el turno del usuario del servidor
     bool myTurn = true;
 };
+
+std::string ConectaCuatro_Server::CreateTab(bool showTurn){
+
+    std::string tablero = "";
+
+    std::string offset = "     ";
+    // Marco de arriba
+    tablero += "-_-_-_-_-_-_-_-_-_-_-_-_- \n \n";
+
+    // Poner de quien es el turno si se pide
+    if (showTurn) {
+        std::string userTurn;
+        if(myTurn)
+            userTurn = hostNick;
+        else 
+            userTurn = clientNick;
+        tablero += (offset + userTurn + "'s turn \n");
+    }
+
+    // Añadir borde superior del tablero
+    tablero += offset;
+    for(int i=0; i<COLS;i++) {
+        tablero.push_back(' ');
+        tablero.push_back('_');
+    }
+    tablero.push_back('\n');
+
+    // Se renderiza de abajo a arriba, para que la gravedad sea hacia abajo
+    // en vez de hacia arriba
+    for(int i = ROWS-1; i >= 0 ;i--){
+
+        tablero += offset;
+        // Borde izquierdo del tablero
+        tablero.push_back('|');
+        // Espacios en esas filas
+        // Numero de columnas, y por lo tanto posibles opciones
+        for(int j=0; j<COLS;j++){
+
+            if(tab[j][i]==1) tablero.push_back('X');
+            else if(tab[j][i]==2) tablero.push_back('O');
+            else tablero.push_back('_');
+
+            // Lineas verticales intermedias
+            tablero.push_back('|');
+        }
+        tablero.push_back('\n');
+    }
+
+    // Indicar el numero de cada columna para clarificar las posibles opciones
+    tablero += offset;
+    for(int i=0; i < COLS; i++) {
+        tablero.push_back(' ');
+        tablero.push_back(std::to_string(i)[0]);
+    }
+    tablero.push_back('\n');
+
+    // Marco de abajo
+    tablero += "\n -_-_-_-_-_-_-_-_-_-_-_-_- \n";
+
+    return tablero;
+}
 
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
