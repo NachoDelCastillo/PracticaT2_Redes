@@ -211,24 +211,34 @@ void ConectaCuatro_Server::UpdateTab(bool showTurn) {
 void GameClient::login()
 {
     std::string msg;
-
-    ConectaCuatro_Message em(nick, msg);
-    em.type = ConectaCuatro_Message::LOGIN;
-
+    ConectaCuatro_Message em(clientNick, msg);
+    em.type = ConectaCuatro_Message::CLIENT_LOGIN;
     socket.send(em, socket);
 }
 
 void GameClient::logout()
 {
-    // Completar
+    std::string msg;
+    ConectaCuatro_Message em(clientNick,msg);
+    em.type = ConectaCuatro_Message::CLIENT_LOGOUT;
+    socket.send(em,socket);
 }
 
 void GameClient::input_thread()
 {
     while (true)
     {
-        // Leer stdin con std::getline
-        // Enviar al servidor usando socket
+        // Recoger el input del cliente
+        std::string clientInput;
+        std::cin >> clientInput;
+        
+        if(clientInput == "q")
+            logout();
+
+        else {
+
+        }
+
     }
 }
 
