@@ -237,8 +237,24 @@ void GameClient::input_thread()
 
         else {
 
-        }
+            if (myTurn) {
 
+                // El input generado por el cliente se manda al servidor, aunque sea invalido
+                // (ya sea porque no es un numero de una columna existente, o la columna esta ya llena de fichas)
+                // Se crea un mensaje con el nombre del cliente y el input generado
+                ConectaCuatro_Message cmsg(clientNick,clientInput);
+
+                // Se marca el tipo de mensaje y se envia
+                cmsg.type= ConectaCuatro_Message::CLIENT_INPUT;
+                socket.send(cmsg,socket);
+
+                // Como el ciente ha enviado su input al servidor, tu turno a acabado, al no ser
+                // que el servidor envie un mensaje de vuelta momentos despues de tipo INVALIDINPUT, 
+                // y por lo tanto siga siendo el turno del cliente
+                myTurn = false;
+            }
+
+        }
     }
 }
 
