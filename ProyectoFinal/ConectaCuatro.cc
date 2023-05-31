@@ -263,7 +263,17 @@ void GameClient::net_thread()
     while(true)
     {
         //Recibir Mensajes de red
-        //Mostrar en pantalla el mensaje de la forma "nick: mensaje"
+        ConectaCuatro_Message cmsg;
+        socket.recv(cmsg);
+
+
+        switch (cmsg.type)
+        {
+            default:
+                std::cout<<cmsg.message<<std::endl;
+                break;
+        }
+        
     }
 }
 
