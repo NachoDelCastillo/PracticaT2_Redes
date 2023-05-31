@@ -269,6 +269,34 @@ void GameClient::net_thread()
 
         switch (cmsg.type)
         {
+            // En caso de que el input enviado no haya sido valido, el servidor enviara este mensaje al cliente
+            // para que vuelva a repetir su turno
+            case ConectaCuatro_Message::MessageType::INVALIDINPUT:
+                std::cout<<cmsg.message<<std::endl;
+                myTurn = true;
+                break;
+                
+            // Situacion del tablero actual, se envia desde el servidor cada vez que el cliente o el servidor ha modificado el tablero
+            case ConectaCuatro_Message::MessageType::CURRENTTAB :
+                std::cout<<cmsg.message<<std::endl;
+                break;
+            
+            // Este mensaje se envia desde el servidor para saber cuando es el turno del cliente
+            case ConectaCuatro_Message::MessageType::CLIENT_GIVETURN :
+                myTurn = true;
+                break;
+
+            // Mensajes que marcan el final de la partida
+            case ConectaCuatro_Message::MessageType::HOST_WIN : // Si el host ha ganado
+            case ConectaCuatro_Message::MessageType::CLIENT_WIN : // Si el cliente (tu) has ganado
+            case ConectaCuatro_Message::MessageType::DRAW : // Si el resultado es empate
+                std::cout<<cmsg.message<<std::endl;
+                // Si se ha terminado la partida de manera natural (sin que ningun usuario se salga de la partida)
+                // Solicitar al servidor el logout inmediato
+                logout();
+                break;
+
+                            // Mensaje no registrado en el cliente, imprimir su contenido de todas formas
             default:
                 std::cout<<cmsg.message<<std::endl;
                 break;

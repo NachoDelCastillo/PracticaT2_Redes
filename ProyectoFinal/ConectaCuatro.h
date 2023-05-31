@@ -43,6 +43,13 @@ public:
         CLIENT_INPUT,
         // Servidor -> Cliente 
         INVALIDINPUT,
+
+        // Servidor -> Cliente 
+        HOST_WIN,
+        CLIENT_WIN,
+        DRAW,
+        CURRENTTAB, // Se envia al cliente para que imprima el estado actual del tablero
+        CLIENT_GIVETURN
     };
 
     ConectaCuatro_Message(){};
