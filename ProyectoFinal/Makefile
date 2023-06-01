@@ -1,23 +1,22 @@
 CC=g++
-CFLAGS=-g -I. -std=c++11
-DEPS = Socket.h Chat.h
-OBJ = Socket.o Chat.o
+CFLAGS=-g -I.
+DEPS = Socket.h ConectaCuatro.h
+OBJ = Socket.o ConectaCuatro.o
 LIBS=-lpthread
 
 %.o: %.cc $(DEPS)
 	$(CC) -g -c -o $@ $< $(CFLAGS)
 
-all: cs cc
+all: CC_Server CC_Client
 
-cs: $(OBJ) ChatServer.o
+CC_Server: $(OBJ) ConectaCuatro_Server.o
 	g++ -o $@ $^ $(CFLAGS) $(LIBS)
 
-cc: $(OBJ) ChatClient.o
+CC_Client: $(OBJ) ConectaCuatro_Client.o
 	g++ -o $@ $^ $(CFLAGS) $(LIBS)
 
 
 .PHONY: clean
 
 clean:
-	rm -f *.o cs cc
-
+	rm -f *.o CC_Server CC_Client

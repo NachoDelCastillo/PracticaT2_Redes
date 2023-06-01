@@ -16,14 +16,16 @@ Socket::Socket(const char * address, const char * port):sd(-1)
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
 
-    // Comprobacion de errores
-    sd = socket(res->ai_family, res->ai_socktype,0);
-    if(sd < 0)
-        std::cout << gai_strerror(sd) << std::endl;
-
     int rc = getaddrinfo(address,port,&hints,&res);
-    if(rc != 0)
+    if(rc != 0){
         std::cout << gai_strerror(rc) << std::endl;
+    }
+
+    sd = socket(res->ai_family, res->ai_socktype,0);
+    if(sd < 0){
+
+        std::cout << gai_strerror(sd) << std::endl;
+    }
 
     sa = *res->ai_addr;
     sa_len = res->ai_addrlen;
@@ -32,6 +34,7 @@ Socket::Socket(const char * address, const char * port):sd(-1)
 
 int Socket::recv(Serializable &obj, Socket * &sock)
 {
+
     struct sockaddr sa;
     socklen_t sa_len = sizeof(struct sockaddr);
 
@@ -45,6 +48,7 @@ int Socket::recv(Serializable &obj, Socket * &sock)
         sock = new Socket(&sa, sa_len);
 
     obj.from_bin(buffer);
+
     return 0;
 }
 
@@ -56,7 +60,9 @@ int Socket::send(Serializable& obj, const Socket& sock)
     
     ssize_t bytes = sendto(sd,obj.data(),obj.size(),0,&sock.sa, sock.sa_len);
 
-    if(bytes <=0) return -1;
+    if(bytes <=0) 
+        return -1;
+        
     return 0;
 }
 

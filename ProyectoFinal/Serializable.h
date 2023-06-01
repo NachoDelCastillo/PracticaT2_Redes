@@ -10,7 +10,7 @@
  *  Este interfaz debe implementarlo aquellos objetos que se transmitan por red
  *  Define una serialización sencilla para la transmisión:
  *
- *  +--------+
+ *  +--------+s
  *  |        |  Esta es la representación binaria del objeto. Cada objeto
  *  |        |  deberá implementar dos métodos:
  *  |  data  |    - to_bin() para rellenar
@@ -58,21 +58,21 @@ public:
     /**
      *  @return tamaño del objeto serializado
      */
-    int32_t size()
+    int64_t size()
     {
         return _size;
     }
 
 protected:
 
-    int32_t _size;
+    int64_t _size;
 
     char *  _data;
 
     /**
      *  Reserva memoria para el buffer del objeto serializado
      */
-    void alloc_data(int32_t data_size)
+    void alloc_data(int64_t data_size)
     {
         if ( _data != 0 )
         {
